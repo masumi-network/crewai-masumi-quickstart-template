@@ -1,28 +1,15 @@
-# 🚀 CrewAI Masumi Starter Kit
+# CrewAI + Masumi Starter Kit
 
 This **CrewAI Masumi Starter Kit** lets you quickly deploy your own CrewAI agents and integrate them with Masumi’s decentralized payment solution.
-[Follow this guide](https://docs.masumi.network/documentation/how-to-guides/agent-from-zero-to-hero)
-
-**Key benefits:**
-
-- Simple setup: Just clone, configure, and deploy.
-- Integrated with Masumi for automated decentralized payments on Cardano.
-- Production-ready API built with FastAPI.
-
----
-
-## 📌 Quick Start
+## Quick Start
 
 Follow these steps to quickly get your CrewAI agents live and monetized on Masumi.
 
-## 📖 Steps
+### Prerequesites
+- [Python 3.12+](https://www.python.org/downloads/)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
-### **1. Clone Repository**
-
-Prerequisites:
-
-- Python >= 3.10 and < 3.13
-- uv (Python package manager)
+1.  **Clone the Repository**
 
 Clone the repository and navigate into the directory:
 
@@ -31,19 +18,20 @@ git clone https://github.com/masumi-network/crewai-masumi-quickstart-template.gi
 cd crewai-masumi-quickstart-template
 ```
 
-Install dependencies:
+2. **Install Dependencies:**
+    ```bash
+    uv sync
+    ```
 
-```bash
-uv venv --python 3.13
-source .venv/bin/activate
-uv pip install -r requirements.txt
-```
+3. **Activate virtual environment:**
 
----
+    ```bash
+    source .venv/bin/activate
+    ```
 
-### ⚙️ **2. Configure Your Environment Variables**
+4. **Configure Your Environment Variables**
 
-Copy `.env.example` to `.env` and fill with your own data:
+Copy `.env.example` to `.env` and fill with your own data (we will create them in further steps):
 
 ```bash
 cp .env.example .env
@@ -52,9 +40,9 @@ cp .env.example .env
 Example `.env` configuration:
 
 ```ini
-# Payment Service
-PAYMENT_SERVICE_URL=http://localhost:3001/api/v1
-PAYMENT_API_KEY=your_payment_key
+# Payment Service 
+PAYMENT_SERVICE_URL=http://localhost:3001/api/v1 
+PAYMENT_API_KEY=your_payment_service_api_key
 
 # Agent Configuration
 AGENT_IDENTIFIER=your_agent_identifier_from_registration
@@ -66,11 +54,15 @@ SELLER_VKEY=your_selling_wallet_vkey
 OPENAI_API_KEY=your_openai_api_key
 ```
 
-#### Get your OpenAI API key from the [OpenAI Developer Portal](https://platform.openai.com/api-keys)
+5. **Verify that the template agent is working:**
+    ```bash
+    python main.py 
+    ```
+    On the first run, you might receive an error that will indicate that environment variables `PAYMENT_SERVICE_URL` and `PAYMENT_API_KEY` are missing. It's okay, we are going to set them up in the next steps. 
 
----
+    But keep that command in mind and run it every time you will significantly change the agent. 
 
-### 🔧 **3. Define Your CrewAI Agents**
+5. **Define Your CrewAI Agents**
 
 Edit the file **`crew_definition.py`** to define your agents and their tasks.
 
@@ -119,46 +111,23 @@ class ResearchCrew:
         return crew
 ```
 
-#### Test your agent by adding this to the end of main.py:
+### 6. **Deploy Your Service**
 
-```python
-def main():
-    input_data = {"text": "The impact of AI on the job market"}
-    crew = ResearchCrew()
-    result = crew.crew.kickoff(input_data)
-    print("\nCrew Output:\n", result)
+When you're happy with your agentic service, deploy it.
 
-if __name__ == "__main__":
-    main()
-```
+You can use a hosting provider such as:
 
-#### Run it
+- **Digital Ocean** (Recommended)
+- AWS, Google Cloud, Azure, etc.
 
-```python
-python main.py
-```
+Your project requires:
 
----
+- **Python 3.12.x**
+- **FastAPI** for the API
+- **Uvicorn** ASGI server
 
-### 🌐 **4. Expose Your Agent via API**
 
-Now we'll expose the agent via a FastAPI interface that follows the [MIP-003](https://github.com/masumi-network/masumi-improvement-proposals/blob/main/MIPs/MIP-003/MIP-003) standard.
-
-Return `main.py` to its original state.
-
-The API provides these endpoints:
-
-- `GET /input_schema` - Returns input requirements
-- `GET /availability` - Checks server status
-- `POST /start_job` - Starts a new AI task
-- `GET /status` - Checks job status
-- `POST /provide_input` - Provides additional input
-
-```
-Temporary job storage warning: For simplicity, jobs are stored in memory (jobs = {}). In production, use a database like PostgreSQL and consider message queues for background processing.
-```
-
-#### Run the API server:
+For local testing, start the API server:
 
 ```python
 python main.py api
@@ -167,20 +136,15 @@ python main.py api
 Access the interactive API documentation at:
 http://localhost:8000/docs
 
----
-
-### 💳 **5. Install the Masumi Payment Service**
+### 7. **Install the Masumi Payment Service**
 
 The Masumi Payment Service handles all blockchain payments for your agent.
 
-Follow the [Installation Guide](https://docs.masumi.network/documentation/get-started/installation) to set up the payment service.
+Follow the official Masumi installation guide:
 
-Once installed, your payment service will be available at:
+👉 [Masumi Payment Installation Guide](https://docs.masumi.network/get-started/installation)
 
-- Admin Dashboard: http://localhost:3001/admin
-- API Documentation: http://localhost:3001/docs
-
-Verify it's running:
+Run Masumi (recommended with Docker):
 
 ```bash
 curl -X GET 'http://localhost:3001/api/v1/health/' -H 'accept: application/json'
@@ -197,9 +161,7 @@ You should receive:
 }
 ```
 
----
-
-### 💰 **6. Top Up Your Wallet with Test ADA**
+### 8. **Top Up Your Wallet with Test ADA**
 
 Get free Test ADA from Cardano Faucet:
 
@@ -207,22 +169,8 @@ Get free Test ADA from Cardano Faucet:
 - Visit the [Cardano Faucet](https://docs.cardano.org/cardano-testnets/tools/faucet).
 - Request Test ADA (Preprod network).
 
----
 
-### 📝 **7. Register Your Crew on Masumi**
-
-Before accepting payments, register your agent on the Masumi Network.
-
-Get your payment source information:
-
-```bash
-curl -X 'GET' \
-  'http://localhost:3001/api/v1/payment-source/?take=10' \
-  -H 'accept: application/json' \
-  -H 'token: your_admin_key'
-```
-
-From the response, copy the `walletVkey` from the Selling Wallet (look for `"network": "PREPROD"`).
+### 9. **Register Your Crew on Masumi**
 
 Register your CrewAI agent via Masumi’s API:
 
@@ -284,24 +232,13 @@ curl -X 'GET' \
   -H 'token: your_admin_key'
 ```
 
-Note your `agentIdentifier` from the response and update it in your `.env` file and update`PAYMENT_API_KEY`
-
-Create an PAYMENT_API key using:
-
-```bash
-curl -X 'POST' 'http://localhost:3001/api/v1/api-key/' \
-  -H 'token: your_admin_key' \
-  -H 'Content-Type: application/json' \
-  -d '{"name": "Agent API Key"}'
-```
+Note your `agentIdentifier` from the response and update it in your `.env` file.
 
 ---
 
-### 🔗 **8. Test Your Monetized Agent**
+### 10. **Run & Verify Your API**
 
-Your agent is now ready to accept payments! Test the complete workflow:
-
-Start a paid job:
+Start your FastAPI server with integrated Masumi payments:
 
 ```bash
 curl -X POST "http://localhost:8000/start_job" \
@@ -316,47 +253,25 @@ This returns a `job_id`.
 
 Check job status:
 
-`curl -X GET "http://localhost:8000/status?job_id=your_job_id"`
-
-Make the payment (from another agent or client):
-
-```bash
-curl -X POST 'http://localhost:3001/api/v1/purchase' \
-  -H 'Content-Type: application/json' \
-  -H 'token: purchaser_api_key' \
-  -d '{
-    "agent_identifier": "your_agent_identifier"
-  }'
+```
+http://localhost:8000/docs
 ```
 
-## Your agent will process the job and return results once payment is confirmed!
+Test with the provided endpoints:
+- `/start_job` to initiate paid AI tasks
+- `/status` to check job status and payment state
+- `/availability` to check service availability
 
-## 📂 **Project Structure**
 
-```
-.
-├── .env.example
-├── .gitignore
-├── README.md
-├── crew_definition.py
-├── logging_config.py
-├── main.py
-├── requirements.txt
-└── runtime.txt
-```
-
----
-
-## ✅ **Summary & Next Steps**
+## **Summary & Next Steps**
 
 - [x] Defined your CrewAI Agents
 - [x] Deployed the CrewAI FastAPI service
 - [x] Installed and configured Masumi Payment Service
 - [ ] **Next Step**: For production deployments, replace the in-memory store with a persistent database.
 
----
 
-## 📚 **Useful Resources**
+## **Useful Resources**
 
 - [CrewAI Documentation](https://docs.crewai.com)
 - [Masumi Documentation](https://docs.masumi.network)
