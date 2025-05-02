@@ -8,7 +8,7 @@ This **CrewAI Masumi Starter Kit** lets you quickly deploy your own CrewAI agent
 Follow these steps to quickly get your CrewAI agents live and monetized on Masumi.
 
 ### Prerequesites
-- [Python 3.12+](https://www.python.org/downloads/)
+- [Python >=3.10 and <3.13](https://www.python.org/downloads/)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 1.  **Clone the Repository**
@@ -58,60 +58,17 @@ OPENAI_API_KEY=your_openai_api_key
 
 5. **Verify that the template agent is working:**
     ```bash
-    python main.py 
+    uvicorn main:app --host=0.0.0.0 --port=${PORT:-8000}
     ```
     On the first run, you might receive an error that will indicate that environment variables `PAYMENT_SERVICE_URL` and `PAYMENT_API_KEY` are missing. It's okay, we are going to set them up in the next steps. 
 
-    But keep that command in mind and run it every time you will significantly change the agent. 
+    If no error occurs, send a request to the server to check that it's working. For example a `/health` request or an `/input_schema`, to get the input schema of your agent. 
 
 5. **Define Your CrewAI Agents**
 
 Edit the file **`crew_definition.py`** to define your agents and their tasks.
 
-Example:
-
-```python
-from crewai import Agent, Crew, Task
-from logging_config import get_logger
-
-class ResearchCrew:
-    def __init__(self, verbose=True, logger=None):
-        self.verbose = verbose
-        self.logger = logger or get_logger(__name__)
-        self.crew = self.create_crew()
-
-    def create_crew(self):
-        researcher = Agent(
-            role='Research Analyst',
-            goal='Find and analyze key information',
-            backstory='Expert at extracting information',
-            verbose=self.verbose
-        )
-
-        writer = Agent(
-            role='Content Summarizer',
-            goal='Create clear summaries from research',
-            backstory='Skilled at transforming complex information',
-            verbose=self.verbose
-        )
-
-        crew = Crew(
-            agents=[researcher, writer],
-            tasks=[
-                Task(
-                    description='Research: {text}',
-                    expected_output='Detailed research findings about the topic',
-                    agent=researcher
-                ),
-                Task(
-                    description='Write summary',
-                    expected_output='Clear and concise summary of the research findings',
-                    agent=writer
-                )
-            ]
-        )
-        return crew
-```
+When you will update your agent, make sure to import it in the `main.py` and adjust input schema, so that it works with your new agent. 
 
 ### 6. **Deploy Your Service**
 
