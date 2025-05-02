@@ -2,11 +2,11 @@ import os
 import uvicorn
 import uuid
 from dotenv import load_dotenv
-from fastapi import FastAPI, Query, HTTPException
-from pydantic import BaseModel, Field, field_validator
+from fastapi import FastAPI,  HTTPException
+from pydantic import BaseModel
 from masumi.config import Config
 from masumi.payment import Payment, Amount
-from crew_definition import ResearchCrew
+from crew import ResearchCrew
 from logging_config import setup_logging
 
 # Configure logging
@@ -66,7 +66,7 @@ class ProvideInputRequest(BaseModel):
     job_id: str
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CrewAI Task Execution
+# CrewAI Task Execution 
 # ─────────────────────────────────────────────────────────────────────────────
 async def execute_crew_task(input_data: str) -> str:
     """ Execute a CrewAI task with Research and Writing Agents """
