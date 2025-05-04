@@ -1,8 +1,0 @@
-fastapi
-uvicorn
-python-dotenv
-crewai
-masumi
-pydantic
-python-multipart
-httpx
