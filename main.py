@@ -2,8 +2,8 @@ import os
 import uvicorn
 import uuid
 from dotenv import load_dotenv
-from fastapi import FastAPI, Query, HTTPException
-from pydantic import BaseModel, Field, field_validator
+from fastapi import FastAPI,  HTTPException
+from pydantic import BaseModel
 from masumi.config import Config
 from masumi.payment import Payment, Amount
 from crew_definition import ResearchCrew
