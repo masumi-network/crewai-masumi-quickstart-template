@@ -173,7 +173,8 @@ async def handle_payment_status(job_id: str, payment_id: str) -> None:
         
         # Update job status to running
         jobs[job_id]["status"] = "running"
-        logger.info(f"Input data: {jobs[job_id]["input_data"]}")
+        input_data = jobs[job_id]["input_data"]
+        logger.info(f"Input data: {input_data}")
 
         # Execute the AI task
         result = await execute_crew_task(jobs[job_id]["input_data"])
