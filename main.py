@@ -296,8 +296,21 @@ def main():
 
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) > 1 and sys.argv[1] == "api":
-        print("Starting FastAPI server with Masumi integration...")
-        uvicorn.run(app, host="0.0.0.0", port=8000)
+        port = 8000
+        host = "0.0.0.0"
+
+        print("\n" + "=" * 70)
+        print("🚀 Starting FastAPI server with Masumi integration...")
+        print("=" * 70)
+        print(f"\nAPI Documentation:   http://localhost:{port}/docs")
+        print(f"Check Availability:  http://localhost:{port}/availability")
+        print(f"Health Check:        http://localhost:{port}/health")
+        print(f"Health Check:        http://localhost:{port}/status")
+        print(f"Input Schema:        http://localhost:{port}/input_schema\n")
+        print("=" * 70 + "\n")
+
+        uvicorn.run(app, host=host, port=port, log_level="info")
     else:
         main()
