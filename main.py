@@ -144,7 +144,7 @@ async def start_job(data: StartJobRequest):
             "unlockTime": payment_request["data"]["unlockTime"],
             "externalDisputeUnlockTime": payment_request["data"]["externalDisputeUnlockTime"],
             "agentIdentifier": agent_identifier,
-            "sellerVkey": os.getenv("SELLER_VKEY"),
+            "sellerVKey": os.getenv("SELLER_VKEY"),
             "identifierFromPurchaser": data.identifier_from_purchaser,
             "amounts": amounts,
             "input_hash": payment.input_hash,
