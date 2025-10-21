@@ -52,6 +52,9 @@ SELLER_VKEY=your_selling_wallet_vkey
 
 # OpenAI API
 OPENAI_API_KEY=your_openai_api_key
+
+# Network (Preprod or Mainnet)
+NETWORK = Preprod
 ```
 
 5. **Verify that the template agent is working:**
