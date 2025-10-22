@@ -310,10 +310,6 @@ if __name__ == "__main__":
         print(f"Status Check:             http://localhost:{port}/status")
         print(f"Input Schema:             http://localhost:{port}/input_schema\n")
         print("=" * 70 + "\n")
-        print("POST:\n")
-        print(f"Start AI Task:            http://localhost:{port}/start_job")
-        print(f"Show Additional Input:    http://localhost:{port}/provide_input\n")
-        print("=" * 70 + "\n")
 
         uvicorn.run(app, host=host, port=port, log_level="info")
     else:
