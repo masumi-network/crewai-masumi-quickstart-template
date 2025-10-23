@@ -64,63 +64,51 @@ OPENAI_API_KEY=your_openai_api_key
 
 ---
 
-### **3. Define Your CrewAI Agents**
+### **3. Define and Test Your CrewAI Agents**
 
 Look around the `crew_definition.py` file. It has a basic `ResearchCrew` defined. Here you can define your agent functionality. 
 
-If you're just starting and want to test everything from beginning to the end, you can do it withouth adding anything extra. 
+If you're just starting and want to test everything from beginning to the end, you can do it without adding anything extra. 
 
-#### Test your agent:
+#### Running Your Agents:
 
-You can test your agent as a standalone script, without having it registered on Masumi.
+The application supports two modes:
 
-To do so, add this to the end of main.py file instead of the existing way of running the API (comment that one out):
-
-```python
-def main():
-    input_data = {"text": "The impact of AI on the job market"}
-    crew = ResearchCrew()
-    result = crew.crew.kickoff(input_data)
-    print("\nCrew Output:\n", result)
-
-if __name__ == "__main__":
-    main()
-```
-
-#### Run it
-
-```python
+**1. Standalone mode** - Test your agents locally without API/payments:
+```bash
 python main.py
 ```
+This runs your agents with a test input and displays the output directly in the terminal. Perfect for development and testing.
+
+**2. API mode** - Run with full Masumi payment integration:
+```bash
+python main.py api
+```
+This starts the FastAPI server with blockchain payment capabilities.
 
 ---
 
-###  **4. Expose Your Agent via API**
+###  **4. API Mode with Masumi Integration**
 
-Now we'll expose the agent via a FastAPI interface that follows the [MIP-003](https://github.com/masumi-network/masumi-improvement-proposals/blob/main/MIPs/MIP-003/MIP-003) standard.
-
-Return `main.py` to its original state.
-
-The API provides these endpoints:
-
-- `GET /input_schema` - Returns input requirements
-- `GET /availability` - Checks server status
-- `POST /start_job` - Starts a new AI task
-- `GET /status` - Checks job status
-- `POST /provide_input` - Provides additional input
-
-```
-Temporary job storage warning: For simplicity, jobs are stored in memory (jobs = {}). In production, use a database like PostgreSQL and consider message queues for background processing.
-```
-
-#### Run the API server:
-
-```python
-python main.py api
-```
+When running in API mode (`python main.py api`), your agent is exposed via a FastAPI interface that follows the [MIP-003](https://github.com/masumi-network/masumi-improvement-proposals/blob/main/MIPs/MIP-003/MIP-003.md) standard for Masumi-compatible services.
 
 Access the interactive API documentation at:
 http://localhost:8000/docs
+
+#### Available Endpoints:
+
+- `GET /input_schema` - Returns input requirements for your agent
+- `GET /availability` - Checks if the server is operational
+- `POST /start_job` - Initiates a new AI task with payment request
+- `GET /status` - Checks job and payment status
+- `POST /provide_input` - Provides additional input (if needed)
+
+
+<Callout type="warn">
+Production Note: The template uses in-memory storage (jobs = {}) for simplicity. 
+In production, implement proper database storage (e.g., PostgreSQL) and consider 
+message queues for background processing.
+</Callout>
 
 ---
 
