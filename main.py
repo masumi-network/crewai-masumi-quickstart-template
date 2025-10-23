@@ -72,8 +72,7 @@ async def execute_crew_task(input_data: str) -> str:
     """ Execute a CrewAI task with Research and Writing Agents """
     logger.info(f"Starting CrewAI task with input: {input_data}")
     crew = ResearchCrew(logger=logger)
-    inputs = {"text": input_data}
-    result = crew.crew.kickoff(inputs)
+    result = crew.crew.kickoff(inputs={"text": input_data})
     logger.info("CrewAI task completed successfully")
     return result
 
@@ -114,22 +113,22 @@ async def start_job(data: StartJobRequest):
         
         logger.info("Creating payment request...")
         payment_request = await payment.create_payment_request()
-        blockchain_identifier = payment_request["data"]["blockchainIdentifier"]
-        payment.payment_ids.add(blockchain_identifier)
-        logger.info(f"Created payment request with blockchain identifier: {blockchain_identifier}")
+        payment_id = payment_request["data"]["blockchainIdentifier"]
+        payment.payment_ids.add(payment_id)
+        logger.info(f"Created payment request with ID: {payment_id}")
 
         # Store job info (Awaiting payment)
         jobs[job_id] = {
             "status": "awaiting_payment",
             "payment_status": "pending",
-            "blockchain_identifier": blockchain_identifier,
+            "payment_id": payment_id,
             "input_data": data.input_data,
             "result": None,
             "identifier_from_purchaser": data.identifier_from_purchaser
         }
 
-        async def payment_callback(blockchain_identifier: str):
-            await handle_payment_status(job_id, blockchain_identifier)
+        async def payment_callback(payment_id: str):
+            await handle_payment_status(job_id, payment_id)
 
         # Start monitoring the payment status
         payment_instances[job_id] = payment
@@ -140,12 +139,12 @@ async def start_job(data: StartJobRequest):
         return {
             "status": "success",
             "job_id": job_id,
-            "blockchainIdentifier": blockchain_identifier,
+            "blockchainIdentifier": payment_request["data"]["blockchainIdentifier"],
             "submitResultTime": payment_request["data"]["submitResultTime"],
             "unlockTime": payment_request["data"]["unlockTime"],
             "externalDisputeUnlockTime": payment_request["data"]["externalDisputeUnlockTime"],
             "agentIdentifier": agent_identifier,
-            "sellerVKey": os.getenv("SELLER_VKEY"),
+            "sellerVkey": os.getenv("SELLER_VKEY"),
             "identifierFromPurchaser": data.identifier_from_purchaser,
             "amounts": amounts,
             "input_hash": payment.input_hash,
@@ -178,16 +177,12 @@ async def handle_payment_status(job_id: str, payment_id: str) -> None:
 
         # Execute the AI task
         result = await execute_crew_task(jobs[job_id]["input_data"])
-        print(f"Result: {result}")
+        result_dict = result.json_dict
         logger.info(f"Crew task completed for job {job_id}")
-        
-        # Convert result to string for payment completion
-        # Check if result has .raw attribute (CrewOutput), otherwise convert to string
-        result_string = result.raw if hasattr(result, "raw") else str(result)
         
         # Mark payment as completed on Masumi
         # Use a shorter string for the result hash
-        await payment_instances[job_id].complete_payment(payment_id, result_string)
+        await payment_instances[job_id].complete_payment(payment_id, result_dict)
         logger.info(f"Payment completed for job {job_id}")
 
         # Update job status
@@ -200,7 +195,7 @@ async def handle_payment_status(job_id: str, payment_id: str) -> None:
             payment_instances[job_id].stop_status_monitoring()
             del payment_instances[job_id]
     except Exception as e:
-        print(f"Error processing payment {payment_id} for job {job_id}: {str(e)}")
+        logger.error(f"Error processing payment {payment_id} for job {job_id}: {str(e)}", exc_info=True)
         jobs[job_id]["status"] = "failed"
         jobs[job_id]["error"] = str(e)
         
@@ -237,10 +232,7 @@ async def get_status(job_id: str):
 
 
     result_data = job.get("result")
-    logger.info(f"Result data: {result_data}")
     result = result_data.raw if result_data and hasattr(result_data, "raw") else None
-
-
 
     return {
         "job_id": job_id,
@@ -299,13 +291,55 @@ async def health():
 # Main Logic if Called as a Script
 # ─────────────────────────────────────────────────────────────────────────────
 def main():
-    print("Running CrewAI as standalone script is not supported when using payments.")
-    print("Start the API using `python main.py api` instead.")
+    """Run the standalone agent flow without the API"""
+    import os
+    # Disable execution traces to avoid terminal issues
+    os.environ['CREWAI_DISABLE_TELEMETRY'] = 'true'
+    
+    print("\n" + "=" * 70)
+    print("🚀 Running CrewAI agents locally (standalone mode)...")
+    print("=" * 70 + "\n")
+    
+    # Define test input
+    input_data = {"text": "The impact of AI on the job market"}
+    
+    print(f"Input: {input_data['text']}")
+    print("\nProcessing with CrewAI agents...\n")
+    
+    # Initialize and run the crew
+    crew = ResearchCrew(verbose=True)
+    result = crew.crew.kickoff(inputs=input_data)
+    
+    # Display the result
+    print("\n" + "=" * 70)
+    print("✅ Crew Output:")
+    print("=" * 70 + "\n")
+    print(result)
+    print("\n" + "=" * 70 + "\n")
+    
+    # Ensure terminal is properly reset after CrewAI execution
+    import sys
+    sys.stdout.flush()
+    sys.stderr.flush()
 
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) > 1 and sys.argv[1] == "api":
-        print("Starting FastAPI server with Masumi integration...")
-        uvicorn.run(app, host="0.0.0.0", port=8000)
+        # Run API mode
+        port = 8000
+        host = "127.0.0.1"
+
+        print("\n" + "=" * 70)
+        print("🚀 Starting FastAPI server with Masumi integration...")
+        print("=" * 70)
+        print(f"API Documentation:        http://localhost:{port}/docs")
+        print(f"Availability Check:       http://localhost:{port}/availability")
+        print(f"Status Check:             http://localhost:{port}/status")
+        print(f"Input Schema:             http://localhost:{port}/input_schema\n")
+        print("=" * 70 + "\n")
+
+        uvicorn.run(app, host=host, port=port, log_level="info")
     else:
+        # Run standalone mode
         main()
