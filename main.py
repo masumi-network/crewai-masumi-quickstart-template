@@ -304,7 +304,6 @@ if __name__ == "__main__":
         print("\n" + "=" * 70)
         print("🚀 Starting FastAPI server with Masumi integration...")
         print("=" * 70)
-        print("\nGET:\n")
         print(f"API Documentation:        http://localhost:{port}/docs")
         print(f"Availability Check:       http://localhost:{port}/availability")
         print(f"Status Check:             http://localhost:{port}/status")
