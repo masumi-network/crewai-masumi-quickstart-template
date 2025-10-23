@@ -172,7 +172,7 @@ Before accepting payments, register your agent on the Masumi Network:
 
 2. Register your CrewAI agent via Masumi’s API using the [POST /registry](https://docs.masumi.network/api-reference/payment-service/post-registry) endpoint. <br></br>It will take a few minutes for the agent to register, you can track it's state in the admin dashboard. 
 
-3. Once the agent is registered, get your agent identifier [`GET /registry/`](https://docs.masumi.network/api-reference/payment-service/get-registry). <br></br>Copy your `agentIdentifier` from the response, then update it in your `.env` file along with your `PAYMENT_API_KEY`. <br></br>Create an PAYMENT_API key using [`GET /api-key/`](https://docs.masumi.network/api-reference/registry-service/get-api-key).
+3. Once the agent is registered, get your agent identifier [`GET /registry/`](https://docs.masumi.network/api-reference/payment-service/get-registry). <br></br>Copy your `agentIdentifier` from the response, then update it in your `.env` file along with your `PAYMENT_API_KEY`. <br></br>Create a PAYMENT_API key using [`GET /api-key/`](https://docs.masumi.network/api-reference/registry-service/get-api-key).
 
 ---
 
