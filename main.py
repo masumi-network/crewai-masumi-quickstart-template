@@ -299,13 +299,55 @@ async def health():
 # Main Logic if Called as a Script
 # ─────────────────────────────────────────────────────────────────────────────
 def main():
-    print("Running CrewAI as standalone script is not supported when using payments.")
-    print("Start the API using `python main.py api` instead.")
+    """Run the standalone agent flow without the API"""
+    import os
+    # Disable execution traces to avoid terminal issues
+    os.environ['CREWAI_DISABLE_TELEMETRY'] = 'true'
+    
+    print("\n" + "=" * 70)
+    print("🚀 Running CrewAI agents locally (standalone mode)...")
+    print("=" * 70 + "\n")
+    
+    # Define test input
+    input_data = {"text": "The impact of AI on the job market"}
+    
+    print(f"Input: {input_data['text']}")
+    print("\nProcessing with CrewAI agents...\n")
+    
+    # Initialize and run the crew
+    crew = ResearchCrew(verbose=True)
+    result = crew.crew.kickoff(inputs=input_data)
+    
+    # Display the result
+    print("\n" + "=" * 70)
+    print("✅ Crew Output:")
+    print("=" * 70 + "\n")
+    print(result)
+    print("\n" + "=" * 70 + "\n")
+    
+    # Ensure terminal is properly reset after CrewAI execution
+    import sys
+    sys.stdout.flush()
+    sys.stderr.flush()
 
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) > 1 and sys.argv[1] == "api":
-        print("Starting FastAPI server with Masumi integration...")
-        uvicorn.run(app, host="0.0.0.0", port=8000)
+        # Run API mode
+        port = 8000
+        host = "127.0.0.1"
+
+        print("\n" + "=" * 70)
+        print("🚀 Starting FastAPI server with Masumi integration...")
+        print("=" * 70)
+        print(f"API Documentation:        http://localhost:{port}/docs")
+        print(f"Availability Check:       http://localhost:{port}/availability")
+        print(f"Status Check:             http://localhost:{port}/status")
+        print(f"Input Schema:             http://localhost:{port}/input_schema\n")
+        print("=" * 70 + "\n")
+
+        uvicorn.run(app, host=host, port=port, log_level="info")
     else:
+        # Run standalone mode
         main()
