@@ -1,5 +1,4 @@
 This **CrewAI Masumi Starter Kit** lets you quickly deploy your own CrewAI agents and integrate them with Masumi’s decentralized payment solution.
-[Follow this guide](https://docs.masumi.network/documentation/how-to-guides/agent-from-zero-to-hero)
 
 **Key benefits:**
 
@@ -29,7 +28,13 @@ Install dependencies:
 
 ```bash
 uv venv --python 3.13
+
+For Windows:
+.\.venv\Scripts\activate
+
+For macOS/Linux:
 source .venv/bin/activate
+
 uv pip install -r requirements.txt
 ```
 
@@ -58,15 +63,19 @@ SELLER_VKEY=your_selling_wallet_vkey
 
 # OpenAI API
 OPENAI_API_KEY=your_openai_api_key
+
+# Network
+NETWORK=Preprod # or Mainnet
 ```
 
-#### Get your OpenAI API key from the [OpenAI Developer Portal](https://platform.openai.com/api-keys)
+For more detailed explanations, go to [Environment Variables](https://docs.masumi.network/documentation/technical-documentation/environment-variables#agent). 
+#### Get your OpenAI API key from the [OpenAI Developer Portal](https://platform.openai.com/api-keys).
 
 ---
 
 ### **3. Define and Test Your CrewAI Agents**
 
-Look around the `crew_definition.py` file. It has a basic `ResearchCrew` defined. Here you can define your agent functionality. 
+Take a look at the `crew_definition.py` file. It has a basic `ResearchCrew`. Here you can define your agent functionality. <br></br>If you would like to develop your own agent crew, go to [CrewAI Docs Core Concepts](https://docs.crewai.com/en/concepts/agents) to learn more.
 
 If you're just starting and want to test everything from beginning to the end, you can do it without adding anything extra. 
 
@@ -156,20 +165,14 @@ Get free Test ADA from Cardano Faucet:
 
 ### **7. Register Your Crew on Masumi**
 
-Before accepting payments, register your agent on the Masumi Network.
+Before accepting payments, register your agent on the Masumi Network:
 
-1. Get your payment source information using [/payment-source/](https://docs.masumi.network/api-reference/payment-service/get-payment-source) endpoint, you will need `walletVkey` from the Selling Wallet (look for `"network": "PREPROD"`).:
+1. Get your payment source information using [/payment-source/](https://docs.masumi.network/api-reference/payment-service/get-payment-source) endpoint, you will need `walletVkey` from the Selling Wallet (look for `"network": "PREPROD"`).
 
 
-2.Register your CrewAI agent via Masumi’s API using the [POST /registry](https://docs.masumi.network/api-reference/payment-service/post-registry) endpoint.
+2. Register your CrewAI agent via Masumi’s API using the [POST /registry](https://docs.masumi.network/api-reference/payment-service/post-registry) endpoint. <br></br>It will take a few minutes for the agent to register, you can track it's state in the admin dashboard. 
 
-It will take a few minutes for the agnet to register, you can track it's state in the admin dashboard. 
-
-3. Once the agent is rerigstered, get your agent identifier [`GET /registry/`](https://docs.masumi.network/api-reference/payment-service/get-registry)
-
-Note your `agentIdentifier` from the response and update it in your `.env` file and update`PAYMENT_API_KEY`
-
-Create an PAYMENT_API key using [`GET /api-key/`](https://docs.masumi.network/api-reference/registry-service/get-api-key)
+3. Once the agent is registered, get your agent identifier [`GET /registry/`](https://docs.masumi.network/api-reference/payment-service/get-registry). <br></br>Copy your `agentIdentifier` from the response, then update it in your `.env` file along with your `PAYMENT_API_KEY`. <br></br>Create an PAYMENT_API key using [`GET /api-key/`](https://docs.masumi.network/api-reference/registry-service/get-api-key).
 
 ---
 
