@@ -77,7 +77,7 @@ For more detailed explanations, go to [Environment Variables](https://docs.masum
 
 Take a look at the `crew_definition.py` file. It has a basic `ResearchCrew`. Here you can define your agent functionality. <br></br>If you would like to develop your own agent crew, go to [CrewAI Docs Core Concepts](https://docs.crewai.com/en/concepts/agents) to learn more.
 
-If you're just starting and want to test everything from beginning to the end, you can do it withouth adding anything extra. 
+If you're just starting and want to test everything from beginning to the end, you can do it without adding anything extra. 
 
 #### Test your agent:
 
