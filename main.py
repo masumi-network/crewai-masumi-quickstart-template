@@ -326,7 +326,6 @@ def main():
     print("\n" + "=" * 70 + "\n")
     
     # Ensure terminal is properly reset after CrewAI execution
-    import sys
     sys.stdout.flush()
     sys.stderr.flush()
 
