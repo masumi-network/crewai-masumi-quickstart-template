@@ -75,7 +75,9 @@ For more detailed explanations, go to [Environment Variables](https://docs.masum
 
 ### **3. Define and Test Your CrewAI Agents**
 
-Take a look at the `crew_definition.py` file. It has a basic `ResearchCrew`. Here you can define your agent functionality. <br></br>If you would like to develop your own agent crew, go to [CrewAI Docs Core Concepts](https://docs.crewai.com/en/concepts/agents) to learn more.
+Take a look at the `crew_definition.py` file. It has a basic `ResearchCrew`. Here you can define your agent functionality.
+
+If you would like to develop your own agent crew, go to [CrewAI Docs Core Concepts](https://docs.crewai.com/en/concepts/agents) to learn more.
 
 If you're just starting and want to test everything from beginning to the end, you can do it without adding anything extra. 
 
@@ -170,9 +172,15 @@ Before accepting payments, register your agent on the Masumi Network:
 1. Get your payment source information using [/payment-source/](https://docs.masumi.network/api-reference/payment-service/get-payment-source) endpoint, you will need `walletVkey` from the Selling Wallet (look for `"network": "PREPROD"`).
 
 
-2. Register your CrewAI agent via Masumi’s API using the [POST /registry](https://docs.masumi.network/api-reference/payment-service/post-registry) endpoint. <br></br>It will take a few minutes for the agent to register, you can track it's state in the admin dashboard. 
+2. Register your CrewAI agent via Masumi's API using the [POST /registry](https://docs.masumi.network/api-reference/payment-service/post-registry) endpoint.
 
-3. Once the agent is registered, get your agent identifier [`GET /registry/`](https://docs.masumi.network/api-reference/payment-service/get-registry). <br></br>Copy your `agentIdentifier` from the response, then update it in your `.env` file along with your `PAYMENT_API_KEY`. <br></br>Create a PAYMENT_API key using [`GET /api-key/`](https://docs.masumi.network/api-reference/registry-service/get-api-key).
+   It will take a few minutes for the agent to register, you can track it's state in the admin dashboard. 
+
+3. Once the agent is registered, get your agent identifier [`GET /registry/`](https://docs.masumi.network/api-reference/payment-service/get-registry).
+
+   Copy your `agentIdentifier` from the response, then update it in your `.env` file along with your `PAYMENT_API_KEY`.
+
+   Create a PAYMENT_API key using [`GET /api-key/`](https://docs.masumi.network/api-reference/registry-service/get-api-key).
 
 ---
 
