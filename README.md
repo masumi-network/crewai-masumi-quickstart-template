@@ -1,4 +1,4 @@
-This **CrewAI Masumi Starter Kit** lets you quickly deploy your own CrewAI agents and integrate them with Masumi’s decentralized payment solution.
+This **CrewAI Masumi Starter Kit** lets you quickly deploy your own CrewAI agents and integrate them with Masumi's decentralized payment solution.
 
 **Key benefits:**
 
@@ -26,17 +26,22 @@ cd crewai-masumi-quickstart-template
 
 Install dependencies:
 
+<Tabs items={[ 'macOS/Linux', 'Windows']}>
+<Tab>
 ```bash
-uv venv --python 3.13
-
-For Windows:
-.\.venv\Scripts\activate
-
-For macOS/Linux:
-source .venv/bin/activate
-
+uv venv --python 3.13  
+source .venv/bin/activate  
 uv pip install -r requirements.txt
 ```
+</Tab>
+<Tab>
+```bash
+uv venv --python 3.13  
+.\.venv\Scripts\activate  
+uv pip install -r requirements.txt
+```
+</Tab>
+</Tabs>
 
 ---
 
